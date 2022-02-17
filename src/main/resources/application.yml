@@ -19,6 +19,26 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: devwanshikrish@gmail.com
+    password: tbiurlnqaaefnhhj
+    port: 587
+
+  rabbitmq:
+    host: rabbitmq
+    port: 15672
+    username: guest
+    password: guest
+    addresses: localhost:15672
+
+
 management:
   endpoints:
     web:
