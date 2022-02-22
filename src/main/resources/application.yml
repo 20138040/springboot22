@@ -5,6 +5,11 @@ spring:
   profiles:
     active: dev
 
+twilio:
+  account_sid: ACa8f6faaad2ab52410b163316a4e229f9
+  auth_token: dc91630b311c87e7bedc5f8415070ad2
+  trial_number: +19034031368
+
 ---
 
 spring:
