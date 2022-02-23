@@ -1,0 +1,5 @@
+this file content should be seen
+
+but not able to read it.
+
+src/main/resources/static/testfile.txt

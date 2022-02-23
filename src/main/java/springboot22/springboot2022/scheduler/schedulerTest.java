@@ -2,6 +2,9 @@ package springboot22.springboot2022.scheduler;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,12 +15,11 @@ import org.slf4j.*;
 import springboot22.springboot2022.entity.CustomMessage;
 import springboot22.springboot2022.queues.queue_config;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Date;
 import java.util.UUID;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
 
 @Service
 public class schedulerTest {
@@ -46,10 +48,7 @@ public class schedulerTest {
         LOGGER.info("Successfully sent mail to ..."+ toEmail);
     }
 
-    public void sendEmailWithAttachment(String toEmail,
-                                        String body,
-                                        String subject,
-                                        String attachment) throws MessagingException {
+    public void sendEmailWithAttachment(String toEmail, String body, String subject, String filepath) throws MessagingException {
 
         LOGGER.info("Sending mail to ..."+ toEmail);
 
@@ -57,15 +56,16 @@ public class schedulerTest {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
             MimeMessageHelper mimeMessageHelper
-                    = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                    = new MimeMessageHelper(mimeMessage, true);
 
             mimeMessageHelper.setFrom("devwanshikrish@gmail.com");
             mimeMessageHelper.setTo(toEmail);
             mimeMessageHelper.setText(body);
             mimeMessageHelper.setSubject(subject);
 
-            FileSystemResource fileSystem = new FileSystemResource(attachment);
-            mimeMessageHelper.addAttachment(fileSystem.getFilename(), fileSystem);
+            Resource resource = new ClassPathResource(filepath);
+
+            mimeMessageHelper.addAttachment(resource.getFilename(), resource);
             System.out.println(mimeMessageHelper);
             System.out.println(mimeMessage);
             javaMailSender.send(mimeMessage);
@@ -88,12 +88,23 @@ public class schedulerTest {
 //                "Test mail from spring boot","Test mail body");
 //    }
 
-//    @Scheduled(fixedRate = 1000 * 60 * 5)
-//    public void sendMailAttachment() throws MessagingException {
-//        sendEmailWithAttachment("18krishnadevwanshi09@gmail.com",
-//                "Test mail from spring boot","Test mail with attachment",
-//                "C:\\Users\\kdevwanshi\\Downloads\\Letters0909217071.pdf");
-//    }
+    @Scheduled(fixedRate = 1000 * 60 * 2)
+    public void sendMailAttachment() throws MessagingException, IOException {
+
+        sendEmailWithAttachment("18krishnadevwanshi09@gmail.com", "Test mail from spring boot",
+                "Test mail with attachment", "static/testfile.txt");
+
+
+         // File file = new File(getClass().getResource("/static/testfile.txt").getFile());
+
+//        Resource resource = new ClassPathResource("static/testfile.txt");
+//        InputStream input = resource.getInputStream();
+//
+//        BufferedReader br = new BufferedReader(new InputStreamReader(input));
+//        String st;
+//        while ((st = br.readLine()) != null)
+//            System.out.println(st);
+    }
 
 //    @Scheduled(fixedRate = 1000)
 //    public void publishMessages(){
